@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 
 public class SectionHeadersAdapter extends BaseAdapter
@@ -17,13 +16,16 @@ public class SectionHeadersAdapter extends BaseAdapter
    private static class SectionPosition {
       public Section section;
       public int position;
+      public int sectionNumber;
 
-      public SectionPosition(Section section, int position) {
+      public SectionPosition(Section section, int position, int sectionNumber) {
          this.section = section;
          this.position = position;
+         this.sectionNumber = sectionNumber;
       }
    }
 
+   protected static final int NO_NEXT_HEADER = -1;
    private static final int HEADER_POSITION = -1;
    private static final int VIEW_TYPES = 2;
    private static final int HEADER_VIEW_TYPE = 0;
@@ -121,16 +123,40 @@ public class SectionHeadersAdapter extends BaseAdapter
     * given absolute position in the list.
     */
    private SectionPosition getSectionPosition(int position) {
+      int sectionNumber = 0;
+
       for (Section section : mSections) {
          if (position == 0) {
-            return new SectionPosition(section, HEADER_POSITION);
+            return new SectionPosition(section, HEADER_POSITION, sectionNumber);
          } else if (position <= section.getCount()) {
-            return new SectionPosition(section, position - 1);
+            return new SectionPosition(section, position - 1, sectionNumber);
          } else {
             position -= section.getCount() + 1;
          }
+
+         sectionNumber++;
       }
 
       return null;
+   }
+
+   /**
+    * Returns the position of the header for the given position
+    */
+   protected int getHeaderPosition(int position) {
+      SectionPosition sectionPosition = getSectionPosition(position);
+
+      return position - (sectionPosition.position + 1);
+   }
+
+   protected int getNextHeaderPosition(int position) {
+      SectionPosition sectionPosition = getSectionPosition(position);
+
+      if (sectionPosition.sectionNumber >= mSections.size() - 1) {
+         return NO_NEXT_HEADER;
+      } else {
+         return position + (sectionPosition.section.getCount() -
+          sectionPosition.position);
+      }
    }
 }
