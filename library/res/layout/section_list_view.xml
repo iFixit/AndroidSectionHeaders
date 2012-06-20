@@ -6,5 +6,7 @@
          android:id="@+id/list_view"
          android:layout_width="fill_parent"
          android:layout_height="fill_parent"
+         android:divider="#FFDDDDDD"
+         android:dividerHeight="1dp"         
          android:fadingEdge="none" />
 </FrameLayout>
