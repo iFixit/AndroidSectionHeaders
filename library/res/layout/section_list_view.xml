@@ -8,5 +8,6 @@
          android:layout_height="fill_parent"
          android:divider="#FFDDDDDD"
          android:dividerHeight="1dp"         
-         android:fadingEdge="none" />
+         android:fadingEdge="none"
+         android:listSelector="@drawable/list_selector_holo_light" />
 </FrameLayout>
